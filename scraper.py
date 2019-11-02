@@ -19,11 +19,15 @@ for c in ascii_lowercase:
     count_proxy = 0
     url = 'http://www.darklyrics.com/'
 
+    if c == 'a':
+        continue
+
+    quit()
     proxy = None
 
     while True:
         try:
-            response = requests.get(url + 'a.html', proxies=proxy)
+            response = requests.get(url + c + '.html', proxies=proxy)
         except ProxyError:
             proxy = change_proxy(count_proxy)
             count_proxy += 1
@@ -36,18 +40,18 @@ for c in ascii_lowercase:
     all_artists = all_artists_div.findAll('a')
 
     output = open("darklyrics.csv", "w+", encoding="utf-8")
-
-    restart = True
+    #
+    # restart = True
 
     for artist in all_artists:
         link = artist['href']
         band_name = artist.text
 
-        if band_name == "AFTER FOREVER":
-            restart = False
-
-        if restart:
-            continue
+        # if band_name == "AFTER FOREVER":
+        #     restart = False
+        #
+        # if restart:
+        #     continue
 
         temp_out = open("temp.csv", "a", encoding="utf-8")
         print(band_name)
