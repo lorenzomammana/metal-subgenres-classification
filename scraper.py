@@ -43,7 +43,7 @@ for c in ascii_lowercase:
         link = artist['href']
         band_name = artist.text
 
-        if band_name == "AFTERBLOOD":
+        if band_name == "AFTER FOREVER":
             restart = False
 
         if restart:
@@ -92,15 +92,18 @@ for c in ascii_lowercase:
 
                     if songs.find("div", {"class": "thanks"}) is not None:
                         songs.find("div", {"class": "thanks"}).decompose()
-
-                    all_lyrics = songs.find("div", {"class": "lyrics"})
-                    all_lyrics.findAll("a")[-1].decompose()
-                except (ProxyError, AttributeError):
+                except ProxyError:
                     proxy = change_proxy(count_proxy)
                     print(proxy)
                     count_proxy += 1
                     continue
                 break
+
+            try:
+                all_lyrics = songs.find("div", {"class": "lyrics"})
+                all_lyrics.findAll("a")[-1].decompose()
+            except AttributeError:
+                continue
 
             all_lyrics = all_lyrics.text.replace(",", "")
             all_lyrics = all_lyrics.replace('"', '')
