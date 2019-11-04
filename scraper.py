@@ -13,16 +13,13 @@ def change_proxy(count):
     return {"http": proxies[count].split("\n")[0]}
 
 
+restart = False
 
-for c in ascii_lowercase:
+for c in  ['19']:
     # proxy = {"http": "157.230.112.218:8080"}
     count_proxy = 0
     url = 'http://www.darklyrics.com/'
 
-    if c == 'a':
-        continue
-
-    quit()
     proxy = None
 
     while True:
@@ -40,18 +37,10 @@ for c in ascii_lowercase:
     all_artists = all_artists_div.findAll('a')
 
     output = open("darklyrics.csv", "w+", encoding="utf-8")
-    #
-    # restart = True
 
     for artist in all_artists:
         link = artist['href']
-        band_name = artist.text
-
-        # if band_name == "AFTER FOREVER":
-        #     restart = False
-        #
-        # if restart:
-        #     continue
+        band_name = artist.text.replace(",", " ")
 
         temp_out = open("temp.csv", "a", encoding="utf-8")
         print(band_name)
@@ -78,7 +67,7 @@ for c in ascii_lowercase:
                 continue
 
             try:
-                album_name = album.find("h2").text.split('"')[1].replace('"', "")
+                album_name = album.find("h2").text.split('"')[1].replace('"', "").replace(",", " ")
                 year = album.find("h2").text.split('"')[2].replace(' (', "").replace(")", "")
             except IndexError:
                 continue
@@ -121,7 +110,6 @@ for c in ascii_lowercase:
 
                 if re.match("[0-9]*\.", lyric) is not None:
                     if title != "":
-                        output.write(band_name + ',' + album_name + ',' + year + ',' + title + ',"' + song_lyrics + '"\n')
                         temp_out.write(band_name + ',' + album_name + ',' + year + ',' + title + ',"' + song_lyrics + '"\n')
 
                     title = lyric.split(".")[1].strip()
@@ -129,7 +117,6 @@ for c in ascii_lowercase:
                 else:
                     song_lyrics += lyric + " "
 
-            output.write(band_name + ',' + album_name + ',' + year + ',' + title + ',"' + song_lyrics + '"\n')
             temp_out.write(band_name + ',' + album_name + ',' + year + ',' + title + ',"' + song_lyrics + '"\n')
             time.sleep(2)
 
