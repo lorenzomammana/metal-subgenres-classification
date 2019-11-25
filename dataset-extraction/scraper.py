@@ -15,7 +15,7 @@ def change_proxy(count):
 
 restart = False
 
-for c in  ['19']:
+for c in ['19']:
     # proxy = {"http": "157.230.112.218:8080"}
     count_proxy = 0
     url = 'http://www.darklyrics.com/'
@@ -35,8 +35,6 @@ for c in  ['19']:
 
     all_artists_div = soup.find("div", {"class": "cont"})
     all_artists = all_artists_div.findAll('a')
-
-    output = open("darklyrics.csv", "w+", encoding="utf-8")
 
     for artist in all_artists:
         link = artist['href']
@@ -121,4 +119,3 @@ for c in  ['19']:
             time.sleep(2)
 
         temp_out.close()
-    output.close()
