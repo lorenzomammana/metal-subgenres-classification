@@ -1,4 +1,4 @@
 .idea/
 *.csv
 __pycache__/
-*.txt
+words.txt
