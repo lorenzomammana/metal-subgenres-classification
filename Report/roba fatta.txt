@@ -5,5 +5,5 @@ Aggiunto genere al dataset
 Aggiunta lingua delle lyrics al dataset
 Rimosse annotazioni nelle quadre e liriche vuote
 Rimosse liriche non in inglese
-Aggiunto genere a 44000 canzoni usando metal archives (distance edit <= 2)
+Aggiunto genere a 44000 canzoni usando metal archives (edit distance <= 2)
 Processati generi in categorie

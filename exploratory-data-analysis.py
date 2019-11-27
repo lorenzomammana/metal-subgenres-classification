@@ -6,11 +6,10 @@ import nltk
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import matplotlib
-from nltk.stem import LancasterStemmer
+
 
 matplotlib.use('TkAgg')
 stop = set(nltk.corpus.stopwords.words('english'))
-lemmatizer = LancasterStemmer()
 
 
 def tokenize(x):
@@ -36,15 +35,6 @@ def tokenize(x):
         print(x, e)
 
 
-def lemmatize(x):
-    out = []
-
-    for word in x:
-        out.append(lemmatizer.stem(word))
-
-    return out
-
-
 def generate_wordcloud(tup):
     wordcloud = WordCloud(width=1600, height=800, background_color='black',
                           max_words=50,
@@ -63,19 +53,17 @@ for genre in genres:
 
 for genre in genres:
     top100 = Counter(genre_lyrics[genre]).most_common(100)
-    print(top100)
-    # wordcloud = generate_wordcloud(top100)
-    #
-    # plt.figure(figsize=(20, 10))
-    # plt.imshow(wordcloud, interpolation='bilinear')
-    # plt.axis("off")
-    # plt.savefig(genre + ".png", bbox_inches='tight')
+    wordcloud = generate_wordcloud(top100)
+
+    plt.figure(figsize=(20, 10))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.savefig(genre + ".png", bbox_inches='tight')
 
 darklyrics['year'].value_counts().sort_index().plot(kind='bar')
 
 genre_per_year = darklyrics.groupby(['year', 'genre'])['year'].count().unstack('genre').fillna(0)
 genre_per_year.plot(kind='bar', stacked=True)
 
-darklyrics['tokens'] = darklyrics.apply(lambda x: tokenize(x['lyrics']))
-darklyrics['lemmatokens'] = darklyrics.apply(lambda x: lemmatize(x['tokens']), axis=1)
+
 

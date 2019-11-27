@@ -1,19 +1,7 @@
 import re
+from nltk.corpus import wordnet
 
-givenpatterns = [(r"won't", "will not"),
-                 (r"'s", ""),
-                 (r"'d", "would"),
-                 (r"don't", "not")]
-
-
-class RegexpReplacer(object):
-    def __init__(self):
-        self.patterns = givenpatterns
-
-    def replace(self, text):
-        for (raw, rep) in self.patterns:
-            regex = re.compile(raw)
-            text = regex.sub(rep, text)
+# https://www.youtube.com/watch?v=r37OYsdH6Z8
 
 
 class RepeatReplacer(object):
@@ -22,6 +10,17 @@ class RepeatReplacer(object):
         self.repl = r'\1\2\3'
 
     def replace(self, word):
+        loop_res = self.regex.sub(self.repl, word)
+
+        if word == loop_res:
+            return loop_res
+        else:
+            return self.replace(loop_res)
+
+    def replace_with_wordnet(self, word):
+        if wordnet.synsets(word):
+            return word
+
         loop_res = self.regex.sub(self.repl, word)
 
         if word == loop_res:
