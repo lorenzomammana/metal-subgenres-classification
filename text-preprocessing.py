@@ -32,7 +32,8 @@ def remove_non_frequent(x):
 
 
 darklyrics = pd.read_csv('darklyrics-token.csv',
-                         converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(",")})
+                         converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(", "),
+                                     'genre': lambda x: x.strip("[]").replace("'", "").split(", ")})
 
 print("Loaded lyrics")
 
