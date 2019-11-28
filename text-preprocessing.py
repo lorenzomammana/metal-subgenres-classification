@@ -55,3 +55,5 @@ frequentwords.sort()
 # Tengo solo le parole più frequenti
 # TODO testare questa cosa, ci mette tanto
 darklyrics['tokens'] = darklyrics.apply(lambda x: remove_non_frequent(x['tokens']), axis=1)
+
+darklyrics.to_csv('darklyrics-proc-tokens.csv', index=False)
