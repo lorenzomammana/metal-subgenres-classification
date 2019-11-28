@@ -58,7 +58,9 @@ def processgenres(x):
         else:
             output.append(s)
 
-    return output
+        output.sort()
+
+    return list(set(output))
 
 
 genreorder = {'Heavy Metal': 0,
@@ -140,7 +142,7 @@ if __name__ == '__main__':
     # Rimuovo possibili strumentali
     darklyrics = darklyrics[darklyrics['lyrics'] != '']
 
-    print(darklyrics['lang'].value_counts())
+    # print(darklyrics['lang'].value_counts())
 
     # Rimuovo le canzoni non in inglese
     darklyrics = darklyrics[darklyrics['lang'] == 'en']
@@ -150,9 +152,10 @@ if __name__ == '__main__':
 
     # Rimuovo le canzoni con genere mancante
     darklyrics = darklyrics[darklyrics.apply(lambda x: 'MISSING' not in x['genre'], axis=1)]
+    # generi = [lista for lista in darklyrics['genre'] if len(lista)>1]
 
     # Trasformo da multi-label a singola label, da valutare
-    darklyrics['genre'] = darklyrics.apply(lambda x: singularizegenre(x['genre']), axis=1)
+    # darklyrics['genre'] = darklyrics.apply(lambda x: singularizegenre(x['genre']), axis=1)
 
     # Magia
     print("fix unicode")
