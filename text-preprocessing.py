@@ -32,8 +32,8 @@ def remove_non_frequent(x):
 
 
 darklyrics = pd.read_csv('darklyrics-token.csv',
-                         converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(","),
-                                     'genre': lambda x: x.strip("[]").replace("'", "").split(",")})
+                         converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(", "),
+                                     'genre': lambda x: x.strip("[]").replace("'", "").split(", ")})
 
 print("Loaded lyrics")
 
@@ -55,4 +55,9 @@ frequentwords.sort()
 # Tengo solo le parole più frequenti
 # TODO testare questa cosa, ci mette tanto
 darklyrics['tokens'] = darklyrics.apply(lambda x: remove_non_frequent(x['tokens']), axis=1)
+<<<<<<< HEAD
 darklyrics.to_csv("darklyrics-proc-tokens.csv", index=False)
+=======
+
+darklyrics.to_csv('darklyrics-proc-tokens.csv', index=False)
+>>>>>>> 15df91359602e68806856ef9e3e1ad2c0b2f0172
