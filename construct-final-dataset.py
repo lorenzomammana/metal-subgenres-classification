@@ -19,6 +19,7 @@ if __name__ == '__main__':
     # Rimuovo le canzoni non in inglese
     darklyrics = darklyrics[darklyrics['lang'] == 'en']
 
+    darklyrics = darklyrics.drop('lang', axis=1)
     # Parso i generi, vedere funzione
     darklyrics['genre'] = darklyrics.apply(lambda x: processgenres(x['genre']), axis=1)
 
