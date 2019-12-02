@@ -21,7 +21,7 @@ if __name__ == '__main__':
         o.readline()
         for line in o:
             parts = line.split('|')
-            words_sep = str(parts[6:][0]).split(',')
+            words_sep = str(parts[5:][0]).split(',')
             clean_parts = [re.sub(rgx, "", i) for i in words_sep]
             counter.update(clean_parts)
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
             for word in clean_parts:
                 ms.add(word)
 
-            data.append([parts[:6], ms])
+            data.append([parts[:5], ms])
 
     os.remove('darklyrics-tokens-temp.csv')
     print('first part')
@@ -60,5 +60,5 @@ if __name__ == '__main__':
 
         output_data.append(s + [tokens])
 
-    df = pd.DataFrame(output_data, columns=['band', 'album', 'year', 'song', 'genre', 'lang', 'tokens'])
+    df = pd.DataFrame(output_data, columns=['band', 'album', 'year', 'song', 'genre', 'tokens'])
     df.to_csv('darklyrics-proc-tokens.csv', index=False)
