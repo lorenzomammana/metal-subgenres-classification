@@ -1,34 +1,35 @@
-import labeled_lda as llda
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.metrics import f1_score
+from llda import LLDAClassifier
 import pandas as pd
-import pickle
-
-# TODO questo è tutto da fare ancora
+from gensim import corpora
 
 
-def gen_lda_tuple(token, genre):
-    return " ".join(token), [genre]
+if __name__ == '__main__':
+    darklyrics = pd.read_csv('darklyrics-proc-tokens.csv',
+                             converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(", "),
+                                         'genre': lambda x: x.strip("[]").replace("'", "").split(", ")})
 
+    documents = darklyrics['tokens']
+    dictionary = corpora.Dictionary(documents)
+    corpus = documents.apply(lambda x: dictionary.doc2bow(x))
+    labels = darklyrics.apply(lambda x: set(x['genre']), axis=1)
 
-darklyrics = pd.read_csv('darklyrics-token.csv',
-                         converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(",")})
+    X_train, X_test, y_train, y_test = train_test_split(corpus, labels, test_size=0.2, random_state=0)
 
-print("Loaded lyrics")
+    mlb = MultiLabelBinarizer(classes=['Heavy Metal', 'Thrash Metal', 'Power Metal',
+                                       'Folk Metal', 'Progressive Metal', 'Death Metal',
+                                       'Doom Metal', 'Black Metal', 'Rock'])
+    y_train = [each for each in y_train]
+    y_train = mlb.fit_transform(y_train)
 
-dataset = darklyrics.apply(lambda x: gen_lda_tuple(x['lemmatokens'], x['genre']), axis=1)
+    llda = LLDAClassifier(alpha=0.5 / y_train.shape[1], maxiter=100)
+    llda.fit(X_train, y_train)
+    result = llda.predict(X_test)
+    y_test = mlb.fit_transform([each for each in y_test])
 
-print("Constructed dataset")
+    score_macro = f1_score(y_test, result, average="macro")
+    score_micro = f1_score(y_test, result, average="micro")
+    print("F1_macro:{0}, F1_micro:{1}".format(score_macro, score_micro))
 
-llda_model = llda.LldaModel(labeled_documents=dataset, alpha_vector='50_div_K')
-
-print("Constructed model")
-
-while True:
-    print("iteration %s sampling..." % (llda_model.iteration + 1))
-    llda_model.training(1)
-    print("after iteration: %s, perplexity: %s" % (llda_model.iteration, llda_model.perplexity()))
-    print("delta beta: %s" % llda_model.delta_beta)
-    if llda_model.is_convergent(method="beta", delta=0.01):
-        break
-
-with open('ldamodel.pickle', 'wb') as f:
-    pickle.dump(llda_model, f)
