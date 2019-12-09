@@ -1,0 +1,6 @@
+[submodule "lib/Labeled-LDA"]
+	path = lib/Labeled-LDA
+	url = https://github.com/TaskeHAMANO/Labeled-LDA.git
+[submodule "lib/OnlineLDA_ParticleFilter"]
+	path = lib/OnlineLDA_ParticleFilter
+	url = https://github.com/TaskeHAMANO/OnlineLDA_ParticleFilter.git
