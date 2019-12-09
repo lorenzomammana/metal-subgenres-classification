@@ -4,15 +4,13 @@ import pandas as pd
 from multiset import Multiset
 import os
 
-
 rgx = re.compile(r"[\[\]\"' \n]")  # data cleanup
 
 if __name__ == '__main__':
-    try:
+
+    if not os.path.isfile('darklyrics-tokens-temp.csv'):
         changer = pd.read_csv('darklyrics-tokens.csv')
-        changer.to_csv('darklyrics-tokens-temp.csv', index=False, sep='|')
-    except:
-        print('Already converted')
+        changer.to_csv('darklyrics-tokens-temp.csv', index=False, sep='♣')
 
     # load and pre-process the data
     counter = Counter()
@@ -20,7 +18,7 @@ if __name__ == '__main__':
     with open('darklyrics-tokens-temp.csv', 'r', encoding='utf8') as o:
         o.readline()
         for line in o:
-            parts = line.split('|')
+            parts = line.split('♣')
             words_sep = str(parts[5:][0]).split(',')
             clean_parts = [re.sub(rgx, "", i) for i in words_sep]
             counter.update(clean_parts)
@@ -61,4 +59,6 @@ if __name__ == '__main__':
         output_data.append(s + [tokens])
 
     df = pd.DataFrame(output_data, columns=['band', 'album', 'year', 'song', 'genre', 'tokens'])
+
+    df = df.drop(['band', 'album', 'year', 'song'], axis=1)
     df.to_csv('darklyrics-proc-tokens.csv', index=False)
