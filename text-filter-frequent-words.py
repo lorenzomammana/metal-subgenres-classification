@@ -30,14 +30,16 @@ if __name__ == '__main__':
             data.append([parts[:5], ms])
 
     os.remove('darklyrics-tokens-temp.csv')
-    print('first part')
-    n = 5  # <- here set threshold for number of occurences
+    print('first part ')
+    min_bound = int(1/100 * len(data))
     common_words = Multiset()
 
+    count = 0
     for item in counter.items():
-        if item[1] >= n:
+        if item[1] >= min_bound:
             # Il 100 serve perchè l'intersection prende il numero di parole minore nel multiset
             # Vogliamo che il numero minore sia il numero di token
+            count += 1
             common_words.add(item[0], 100)
 
     print('second part')
