@@ -4,3 +4,10 @@ __pycache__/
 words.txt
 tmp/
 *.h5
+*.log
+*.out
+*.gz
+*.dvi
+*.blg
+*.bbl
+*.aux
