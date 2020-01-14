@@ -1,12 +1,13 @@
-from keras.callbacks import ModelCheckpoint
-from keras.layers import Dense, Dropout
+from tensorflow.keras.callbacks import ReduceLROnPlateau
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.layers import Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, classification_report, accuracy_score, hamming_loss
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-from keras import Sequential, Input
-from keras import backend as K
+from tensorflow.keras import Sequential, Input
+from tensorflow.keras import backend as K
 
 
 def recall_m(y_true, y_pred):
@@ -57,12 +58,18 @@ if __name__ == '__main__':
     model.add(Dense(9, activation='sigmoid'))
 
     mcp_save = ModelCheckpoint('best_mlp.h5', save_best_only=True, monitor='val_f1_m', mode='max')
-
+    reduce_lr_loss = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=7, verbose=1, epsilon=1e-4, mode='min')
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc', f1_m])
 
     model.fit(X_train, y_train, batch_size=64, epochs=30, verbose=1,
-              validation_data=(X_test, y_test), callbacks=[mcp_save])
+              validation_data=(X_test, y_test), callbacks=[mcp_save, reduce_lr_loss])
 
     model.load_weights('best_mlp.h5')
 
-    model.evaluate(X_test, y_test)
+    preds = model.predict(X_test)
+    preds[preds >= 0.5] = 1
+    preds[preds < 0.5] = 0
+
+    print(classification_report(y_test, preds))
+    print(hamming_loss(y_test, preds))
+    print(accuracy_score(y_test, preds))
