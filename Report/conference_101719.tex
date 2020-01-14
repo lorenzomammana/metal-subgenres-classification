@@ -44,7 +44,7 @@ component, formatting, style, styling, insert
 \section{Introduzione}
 Numerosi studi in letteratura sono stati effettuati riguardo la classificazione automatica di generi musicali sfruttando le liriche delle canzoni. Ci si aspetta che generi musicali diversi contengano tematiche e linguaggi molto differenti tra di loro e quindi la classificazione dovrebbe essere possibile. In questo studio si è deciso di verificare la possibilità di estendere questa analisi andando a valutare la possibilità di distinguere sottogeneri musicali di uno stesso genere. In particolare ci si è concentrati sull'analisi di sottogeneri della musica metal, questo tipo di musica presenta una enorme varietà di sottogeneri musicali, ciascuno con il proprio stile linguistico e le proprie tematiche.
 La classificazione delle liriche è stata effettuata utilizzando tecniche di text-preprocessing e text-mining. Uno dei metodi più noti per la classificazione è quello basato su Latent Dirichlet Allocation (LDA), questo tipo di metodo permette di eseguire l'inferenza di \textit{Topic} all'interno di un testo in maniera non supervisionata.
-Avendo a disposizione dati etichettati con uno o più sottogeneri si è utilizzato una versione più moderna di LDA, denomita LLDA (Labelled LDA) che permette di etichettare i \textit{topic} ottenendo una classificazione supervisionata.  
+Avendo a disposizione dati etichettati con uno o più sottogeneri si è utilizzato una versione più moderna di LDA, denomita LLDA (Labeled LDA) che permette di etichettare i \textit{topic} ottenendo una classificazione supervisionata.  
 
 \section{Dataset}
 Il dataset è stato costruito eseguendo lo scraping di due diversi siti web \href{http://www.darklyrics.com}{Darklyrics} e \href{https://www.metal-archives.com/}{Metal Archives}, il primo sito è una collezione di liriche, mentre il secondo è stato utilizzato per integrare le informazioni riguardo al genere degli artisti. 
@@ -236,6 +236,7 @@ Il filtraggio produce 1305 token, questo sta a significare che più del 99\% dei
 \section{Classificazione}
 La classificazione segue due procedimenti distinti nel caso di singola label o di label multipla. In comune vi è il fatto che il dataset viene suddiviso in 80\% training e 20\% test.
 \subsection{Classificazione multi-label}
+\subsubsection{Labeled LDA}
 Il primo modello utilizzato per la classificazione multi-label è un LLDA, la scelta di utilizzare un algoritmo di questo tipo è evidente, il semplice LDA, essendo un algoritmo non supervisionato non si presta bene per una classificazione di questo tipo, inoltre ogni lirica è etichettata e questo ci porta a ragionare in termini di classificazione supervisionata piuttosto che non. Rispetto al tradizionale approccio utilizzato da LDA, questo tipo di algoritmo restringe la distribuzione delle parole invece che su tutti i topic, solamente su quelli che rispettano l'etichetta presente nel training set. Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
 
 \begin{figure}[H]
@@ -250,7 +251,7 @@ Il primo modello utilizzato per la classificazione multi-label è un LLDA, la sc
   \begin{subfigure}[b]{0.45\textwidth}
   \centering
     \includegraphics[width=0.7\textwidth]{images/llda}
-    \caption{Labelled LDA}
+    \caption{Labeled LDA}
   \end{subfigure}
   \caption{Differenza tra modello non supervisionato e supervisionato}
   \label{fig_llda}
@@ -265,6 +266,29 @@ Ed è utile per verificare se il modello non sta classificando in maniera comple
 EMR = \frac{1}{|N|}\sum_{i=1}^{|N|}I(Y_i = Z_i)
 \end{equation}
 I risultati sono riportati in tabella \ref{t_res_llda}:\\
+\begin{table}[H]
+\centering
+\caption{Risultati LLDA}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{F1-Mi} & \textbf{F1-Ma} & \textbf{HL} & \textbf{EMR} \\ \hline
+0.3300         & 0.3200         & 0.3158      & 0.0318       \\ \hline
+\end{tabular}
+\label{t_res_llda}
+\end{table}
+Come ci si aspettava i risultati sono molto bassi, il dataset è complesso ed estremamente sbilanciato, questo è abbastanza per giustificare il fallimento del modello. E' relativamente buono il valore della $ HL $, il modello sembra apprendere delle differenze sensate, l'EMR mostra invece come non sia praticamente mai in grado di ottenere una classificazione perfetta di tutte le label correttamente.
+\subsubsection{Percettrone multistrato}
+Un altro modello utilizzato in letteratura per la classificazione multi-label è il percettrone multistrato (MLP), l'architettura scelta è stata ottenuta in maniera sperimentale ed è così definita:
+\begin{table}[H]
+\centering
+\caption{Risultati MLP}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{F1-Mi} & \textbf{F1-Ma} & \textbf{HL} & \textbf{EMR} \\ \hline
+0.4300         & 0.3200         & 0.1493      & 0.2493       \\ \hline
+\end{tabular}
+\label{t_res_mlp}
+\end{table}
 \begin{table}[H]
 \centering
 \begin{tabular}{|l|l|l|l|l|}
