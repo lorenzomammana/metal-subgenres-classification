@@ -278,7 +278,22 @@ I risultati sono riportati in tabella \ref{t_res_llda}:\\
 \end{table}
 Come ci si aspettava i risultati sono molto bassi, il dataset è complesso ed estremamente sbilanciato, questo è abbastanza per giustificare il fallimento del modello. E' relativamente buono il valore della $ HL $, il modello sembra apprendere delle differenze sensate, l'EMR mostra invece come non sia praticamente mai in grado di ottenere una classificazione perfetta di tutte le label correttamente.
 \subsubsection{Percettrone multistrato}
-Un altro modello utilizzato in letteratura per la classificazione multi-label è il percettrone multistrato (MLP), l'architettura scelta è stata ottenuta in maniera sperimentale ed è così definita:
+Un altro modello utilizzato in letteratura per la classificazione multi-label è il percettrone multistrato (MLP), l'architettura scelta è stata ottenuta in maniera sperimentale ed è così definita (Tabella \ref{t_mlp_arch}):
+\begin{table}[H]
+\centering
+\caption{Architettura MLP}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Layer} & \textbf{Output} & \textbf{Param \#} \\ \hline
+dense (Dense)         & (None, 256)           & 334336            \\ \hline
+dropout (Dropout)     & (None, 256)           & 0                 \\ \hline
+dense\_1 (Dense)      & (None, 128)           & 32896             \\ \hline
+dense\_2 (Dense)      & (None, 9)             & 1161              \\ \hline
+\end{tabular}
+\label{t_mlp_arch}
+\end{table}
+Il modello viene addestrato per 30 epoche utilizzando l'ottimizzatore Adam ($ lr = 0.01 $) con riduzione del learning rate di un fattore $ \phi = 0.1 $ in caso di non decrescita della loss sul test set.
+I risultati ottenuti sono decisamente migliori come illustrato in tabella \ref{t_res_mlp}.
 \begin{table}[H]
 \centering
 \caption{Risultati MLP}
@@ -289,26 +304,10 @@ Un altro modello utilizzato in letteratura per la classificazione multi-label è
 \end{tabular}
 \label{t_res_mlp}
 \end{table}
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|l|l|l|}
-\hline
-\textbf{}         & \textbf{precision} & \textbf{recall} & \textbf{f1-score} & \textbf{support} \\ \hline
-Heavy Metal       & 0.28               & 0.37            & 0.32              & 6197             \\ \hline
-Thrash Metal      & 0.31               & 0.45            & 0.37              & 6574             \\ \hline
-Power Metal       & 0.24               & 0.57            & 0.34              & 5683             \\ \hline
-Folk Metal        & 0.13               & 0.49            & 0.20              & 1097             \\ \hline
-Progressive Metal & 0.12               & 0.68            & 0.20              & 2517             \\ \hline
-Death Metal       & 0.58               & 0.43            & 0.49              & 12128            \\ \hline
-Doom Metal        & 0.24               & 0.49            & 0.32              & 4688             \\ \hline
-Black Metal       & 0.42               & 0.51            & 0.46              & 5840             \\ \hline
-Rock              & 0.11               & 0.72            & 0.20              & 2262             \\ \hline
-micro avg         & 0.25               & 0.49            & 0.33              & 46986            \\ \hline
-macro avg         & 0.27               & 0.52            & 0.32              & 46986            \\ \hline
-weighted avg      & 0.35               & 0.49            & 0.38              & 46986            \\ \hline
-samples avg       & 0.27               & 0.50            & 0.33              & 46986            \\ \hline
-\end{tabular}
-\end{table}
+Particolarmente interessante il valore molto basso della Hamming-Loss, inoltre in questo caso un buon 25\% delle label viene perfettamente classificato.
+
+\subsection{Classificazione singola-label}
+
 \section*{References}
 
 Please number citations consecutively within brackets \cite{b1}. The 
@@ -331,7 +330,7 @@ For papers published in translation journals, please give the English
 citation first, followed by the original foreign-language citation \cite{b6}.
 
 \begin{thebibliography}{00}
-\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel fsdasdaunctions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
 \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
 \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
 \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
