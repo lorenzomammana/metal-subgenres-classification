@@ -233,8 +233,39 @@ T = \gamma * N
 \end{equation}
 Il parametro $ \gamma $ regola la percentuale di token da filtrare, per la classificazione è stato utilizzato $ \gamma = 0.01 $ in modo tale da filtrare tutti quei token che compaiono in meno dell'1\% delle liriche.
 Il filtraggio produce 1305 token, questo sta a significare che più del 99\% dei token sono estremamente poco frequenti!
+\section{Latent Dirichlet Allocation}
+Prima di procedere con la classificazione vera e propria si è provato ad utilizzare LDA, principalmente per verificare se esistesse una struttura all'interno dei dati evidenziabile senza utilizzare le label.
+Il modello viene addestrato utilizzando un valore di $ \alpha $ asimmetrico appreso automaticamente sui dati che dovrebbe migliorare le performance su un dataset sbilanciato, settando 9 topic vengono prodotti i risultati mostrati in figura \ref{fig_topic_pca}.
+\begin{figure}[H]
+\centerline{\includegraphics[width=1\columnwidth, scale=0.3]{images/topic_pca}}
+\caption{Distanza tra i topic ottenuti}
+\label{fig_topic_pca}
+\end{figure}
+Il grafico prodotto mostra dei topic abbastanza distribuiti e con poche sovrapposizioni, che sono comunque giustificate considerando la similarità intrinseca dei topic in oggetto.
+Visualizzando le parole più frequenti all'interno dei topic si è cercato di assegnare il sottogenere musicale associato ad ogni topic, i risultati sono mostrati in tabella \ref{t_topic_label}.
+\begin{table}[H]
+\centering
+\caption{Top 10 parole frequenti per topic}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{|l||llllllllll||l|}
+\hline
+id & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} &      & Potential topic \\ \hline
+1        & ey                    & dark                  & night                 & fal                   & light                 & dream                 & soul                  & heart                 & sky                   & cold & Death           \\ \hline
+2        & tim                   & nev                   & know                  & see                   & feel                  & way                   & lik                   & com                   & lov                   & lif  & Doom            \\ \hline
+3        & lif                   & die                   & dead                  & lie                   & kil                   & pain                  & fuck                  & mind                  & hat                   & liv  & Thrash          \\ \hline
+4        & blood                 & burn                  & hel                   & fir                   & dea                   & shal                  & black                 & com                   & sin                   & flam & Black           \\ \hline
+5        & god                   & war                   & man                   & evil                  & land                  & pow                   & new                   & ear                   & nam                   & rid  & Power           \\ \hline
+6        & on                    & tak                   & fre                   & stand                 & ris                   & high                  & break                 & hand                  & watch                 & play & Heavy           \\ \hline
+7        & fight                 & got                   & get                   & strength              & right                 & along                 & emot                  & big                   & wear                  & chas & Progressive     \\ \hline
+8        & hard                  & yeah                  & dant                  & sing                  & song                  & rock                  & anyth                 & dog                   & wom                   & bal  & Rock            \\ \hline
+9        & gold                  & welcom                & doom                  & sev                   & tal                   & wint                  & strange               & snow                  & hous                  & sink & Folk            \\ \hline
+\end{tabular}
+}
+\label{t_topic_label}
+\end{table}
+Alcuni topic sono facilmente identificabili grazie alla conoscenza del dominio, parole come "god", "land" o "power" sono facilmente ricollegabili al Power metal, mentre per generi come il Death o il Doom i risultati prodotti sono piuttosto ambigui. Per ottenere un'indicazione più rigorosa riguardo la bontà dei risultati vengono calcolate le misure di Perplexity e Topic Coherence (variante sliding window) con valori rispettivamente pari a -6.5242 e 0.3978.
 \section{Classificazione}
-La classificazione segue due procedimenti distinti nel caso di singola label o di label multipla. In comune vi è il fatto che il dataset viene suddiviso in 80\% training e 20\% test.
+La classificazione segue due procedimenti distinti nel caso di singola label o di label multipla. In comune vi è il fatto che il dataset viene suddiviso in 80\% training e 20\% test nello stesso modo per garantire consistenza ai risultati prodotti.
 \subsection{Classificazione multi-label}
 \subsubsection{Labeled LDA}
 Il primo modello utilizzato per la classificazione multi-label è un LLDA, la scelta di utilizzare un algoritmo di questo tipo è evidente, il semplice LDA, essendo un algoritmo non supervisionato non si presta bene per una classificazione di questo tipo, inoltre ogni lirica è etichettata e questo ci porta a ragionare in termini di classificazione supervisionata piuttosto che non. Rispetto al tradizionale approccio utilizzato da LDA, questo tipo di algoritmo restringe la distribuzione delle parole invece che su tutti i topic, solamente su quelli che rispettano l'etichetta presente nel training set. Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
@@ -307,6 +338,10 @@ I risultati ottenuti sono decisamente migliori come illustrato in tabella \ref{t
 Particolarmente interessante il valore molto basso della Hamming-Loss, inoltre in questo caso un buon 25\% delle label viene perfettamente classificato.
 
 \subsection{Classificazione singola-label}
+In questa sezione vengono descritti i risultati ottenuti applicando diversi algoritmi supervisionati per 
+% Please add the following required packages to your document preamble:
+% \usepackage[normalem]{ulem}
+% \useunder{\uline}{\ul}{}
 
 \section*{References}
 
