@@ -1,13 +1,16 @@
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.metrics import f1_score, classification_report, hamming_loss, accuracy_score
-from llda import LLDAClassifier
 import pandas as pd
 from gensim import corpora
+import sys
+sys.path.append("..")
+
+from llda import LLDAClassifier
 
 
 if __name__ == '__main__':
-    darklyrics = pd.read_csv('darklyrics-proc-tokens.csv',
+    darklyrics = pd.read_csv('../darklyrics-proc-tokens.csv',
                              converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(", "),
                                          'genre': lambda x: x.strip("[]").replace("'", "").split(", ")})
 
