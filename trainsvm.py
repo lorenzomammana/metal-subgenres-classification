@@ -2,25 +2,33 @@ from sklearn import svm
 import pandas as pd
 from sklearn import tree
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import f1_score
-from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.preprocessing import MultiLabelBinarizer, LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
+
 
 def fit(s):
-    darklyrics = pd.read_csv('darklyrics-knime-proc.csv').sample(n=10005, replace=False)
-    # print(darklyrics)
+    darklyrics = pd.read_csv('darklyrics-proc-tokens-single.csv',
+                             converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(", ")})
 
-    darklyrics_copy = darklyrics.copy()
-    y = darklyrics['genre']
-    print('Nice')
-    X = darklyrics_copy.drop('genre', axis = 1)
-    print('Nice')
-    #y = darklyrics['genre']
+    corpus = darklyrics.apply(lambda x: " ".join(x['tokens']), axis=1)
+    vectorizer = TfidfVectorizer()
+    X = vectorizer.fit_transform(corpus)
+    X = X.todense()
+    X = np.array(X)
+    labels = darklyrics['genre']
+
     print('Fase Split')
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
-    print(type(X_train))
+    X_train, X_test, y_train, y_test = train_test_split(X, labels, test_size=0.2, random_state=0)
+
+    encoder = LabelEncoder()
+    y_train = encoder.fit_transform(y_train)
+    y_test = encoder.transform(y_test)
+
     if s == "tree":
         clf = tree.DecisionTreeClassifier()
     elif s == "svm":
