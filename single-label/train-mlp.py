@@ -34,7 +34,7 @@ def f1_m(y_true, y_pred):
 
 
 if __name__ == '__main__':
-    darklyrics = pd.read_csv('darklyrics-proc-tokens-single.csv',
+    darklyrics = pd.read_csv('../darklyrics-proc-tokens-single.csv',
                              converters={'tokens': lambda x: x.strip("[]").replace("'", "").split(", ")})
 
     corpus = darklyrics.apply(lambda x: " ".join(x['tokens']), axis=1)
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 
     onehot = OneHotEncoder(sparse=False)
     y_train = onehot.fit_transform(y_train.reshape(len(y_train), 1))
-    y_test_oh = onehot.fit_transform(y_test.reshape(len(y_test), 1))
+    y_test_oh = onehot.transform(y_test.reshape(len(y_test), 1))
 
     model = Sequential()
     model.add(Dense(256, activation='relu', input_shape=(1305,)))

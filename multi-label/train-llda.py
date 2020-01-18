@@ -1,6 +1,6 @@
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, classification_report, hamming_loss, accuracy_score
 from llda import LLDAClassifier
 import pandas as pd
 from gensim import corpora
@@ -24,12 +24,12 @@ if __name__ == '__main__':
     y_train = [each for each in y_train]
     y_train = mlb.fit_transform(y_train)
 
-    llda = LLDAClassifier(alpha=0.5 / y_train.shape[1], maxiter=100)
+    llda = LLDAClassifier(alpha=0.1 / y_train.shape[1], beta=1, maxiter=100)
     llda.fit(X_train, y_train)
-    result = llda.predict(X_test)
+    preds = llda.predict(X_test)
     y_test = mlb.fit_transform([each for each in y_test])
 
-    score_macro = f1_score(y_test, result, average="macro")
-    score_micro = f1_score(y_test, result, average="micro")
-    print("F1_macro:{0}, F1_micro:{1}".format(score_macro, score_micro))
+    print(classification_report(y_test, preds))
+    print(hamming_loss(y_test, preds))
+    print(accuracy_score(y_test, preds))
 
