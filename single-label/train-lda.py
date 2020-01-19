@@ -3,7 +3,6 @@ from gensim import corpora
 import sys
 
 from gensim.models import CoherenceModel
-import pyLDAvis
 sys.path.append("..")
 import numpy as np
 from gensim.models.ldamodel import LdaModel
