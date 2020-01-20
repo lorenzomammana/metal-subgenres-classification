@@ -372,7 +372,15 @@ Alcuni topic sono facilmente identificabili grazie alla conoscenza del dominio, 
 La classificazione segue due procedimenti distinti nel caso di singola label o di label multipla. In comune vi è il fatto che il dataset viene suddiviso in 80\% training e 20\% test nello stesso modo per garantire consistenza ai risultati prodotti.
 \subsection{Classificazione multi-label}
 \subsubsection{Labeled LDA}
-\Il primo modello utilizzato per la classificazione multi-label è un LLDA, la scelta di utilizzare un algoritmo di questo tipo è evidente, il semplice LDA, essendo un algoritmo non supervisionato non si presta bene per una classificazione di questo tipo, inoltre ogni lirica è etichettata e questo ci porta a ragionare in termini di classificazione supervisionata piuttosto che non. Rispetto al tradizionale approccio utilizzato da LDA, questo tipo di algoritmo restringe la distribuzione delle parole invece che su tutti i topic, solamente su quelli che rispettano l'etichetta presente nel training set. Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
+Il primo modello utilizzato per la classificazione multi-label è un LLDA, la 
+scelta di utilizzare un algoritmo di questo tipo è evidente, il semplice LDA, 
+essendo un algoritmo non supervisionato non si presta bene per una 
+classificazione di questo tipo, inoltre ogni lirica è etichettata e questo ci 
+porta a ragionare in termini di classificazione supervisionata piuttosto che 
+non. Rispetto al tradizionale approccio utilizzato da LDA, questo tipo di 
+algoritmo restringe la distribuzione delle parole invece che su tutti i topic, 
+solamente su quelli che rispettano l'etichetta presente nel training set. 
+Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
 
 \begin{figure}[H]
 \vspace{-5mm}
