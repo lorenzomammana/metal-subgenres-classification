@@ -396,7 +396,7 @@ Le metriche utilizzate per la valutazione sono le classiche Micro-average, Macro
 \begin{equation}
 HL=\frac{1}{|N|*|L|}\sum_{i=1}^{|N|}\sum_{j=1}^{|L|}xor(y_ij, z_ij)
 \end{equation}
-\`E utile per verificare se il modello non sta classificando in
+\` E utile per verificare se il modello non sta classificando in
 maniera completamente casuale, la seconda invece verifica il numero
 di multilabel perfettamente classificate:\\
 \begin{equation}
@@ -413,7 +413,12 @@ I risultati sono riportati in tabella \ref{t_res_llda}:\\
 \end{tabular}
 \label{t_res_llda}
 \end{table}
-Come ci si aspettava i risultati sono molto bassi, il dataset è complesso ed estremamente sbilanciato, questo è abbastanza per giustificare il fallimento del modello. E' relativamente buono il valore della $ HL $, il modello sembra apprendere delle differenze sensate, l'EMR mostra invece come non sia praticamente mai in grado di ottenere una classificazione perfetta di tutte le label correttamente.
+Come ci si aspettava i risultati sono poco performanti in quanto il dataset
+è complesso ed estremamente sbilanciato.
+\`E relativamente buono il valore della $ HL $: il modello sembra
+apprendere delle differenze sensate; l'EMR mostra invece come
+il modello non sia praticamente mai in grado di ottenere una classificazione
+perfetta di tutte le label correttamente.
 \subsubsection{Percettrone multistrato}
 Un altro modello utilizzato in letteratura per la classificazione multi-label è il percettrone multistrato (MLP) \cite{Rosenblatt1963PRINCIPLESON}, l'architettura scelta è stata ottenuta in maniera sperimentale ed è così definita (Tabella \ref{t_mlp_arch}):
 \begin{table}[H]
