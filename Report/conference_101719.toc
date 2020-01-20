@@ -1,0 +1,21 @@
+\select@language {italian}
+\select@language {italian}
+\contentsline {section}{\numberline {I}Introduzione}{1}{section.1}
+\contentsline {section}{\numberline {II}Dataset}{1}{section.2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {II-A}}Gestione del genere musicale}{2}{subsection.2.1}
+\contentsline {section}{\numberline {III}Preprocessamento del testo}{2}{section.3}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Tokenizzazione}{3}{subsection.3.1}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Lemmatizzazione}{3}{subsection.3.2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Filtraggio dei token per frequenza}{3}{subsection.3.3}
+\contentsline {section}{\numberline {IV}Latent Dirichlet Allocation}{3}{section.4}
+\contentsline {section}{\numberline {V}Classificazione}{4}{section.5}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Classificazione multi-label}{4}{subsection.5.1}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-A}1}Labeled LDA}{4}{subsubsection.5.1.1}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-A}2}Percettrone multistrato}{5}{subsubsection.5.1.2}
+\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Classificazione singola-label}{5}{subsection.5.2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}1}Percettrone multistrato}{5}{subsubsection.5.2.1}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}2}Macchina a vettori di supporto}{5}{subsubsection.5.2.2}
+\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {V-B}3}Albero di decisione}{5}{subsubsection.5.2.3}
+\contentsline {section}{\numberline {VI}Discussione}{5}{section.6}
+\contentsline {section}{\numberline {VII}Conclusioni}{5}{section.7}
+\contentsline {section}{Riferimenti bibliografici}{6}{section*.17}

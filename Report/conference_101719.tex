@@ -38,22 +38,19 @@
 
 \begin{abstract}
 Il metal \`e un genere musicale nato all’incirca
-alla fine degli anni ’70. Nel corso degli ultimi 40 anni la musica
+agli inizi degli anni ’70. Nel corso degli ultimi 40 anni la musica
 metal ha avuto talmente tante variazioni in stile e tematiche
 che nel tempo si \`e diversificato andando a formare dei veri e
 propri sottogeneri musicali. Queste correnti differiscono sia dal
 punto di vista musicale sia dal punto di vista dei temi affrontati
 nelle liriche. \`E possibile ipotizzare che alcuni temi siano propri di
-precisi sottogeneri musicali. In questo studio verra\`a mostrato come
+precisi sottogeneri musicali. In questo studio verr\`a mostrato come
 \`e possibile usare strumenti di text-mining e machine learning al
 fine di andare a classificare in modo automatico i vari sottogeneri
-musicali partendo dalle liriche delle canzoni. Il dataset usato
-deriva da un’operazione di scraping di siti web contenenti liriche
-metal. Per quanto riguarda il task di classificazione \`e stato usato
-il modello LLDA per poi venir comparato ad altri modelli di classificazione sia 
-single label che multi label.
+musicali partendo dalle liriche delle canzoni.
 \end{abstract}
 
+\tableofcontents
 
 \section{Introduzione}
 Numerosi studi in letteratura sono stati effettuati riguardo la classificazione
@@ -63,8 +60,7 @@ tra di loro e quindi la classificazione dovrebbe essere possibile.
 Questo studio si concentra sulla possibilità di distinguere sottogeneri musicali
 dello stesso genere.
 In particolare ci si è concentrati sull'analisi di sottogeneri del genere musicale
-metal in quanto questo tipo di musica presenta una vasta varietà di sottogeneri
-musicali, ciascuno con il proprio stile linguistico e le proprie tematiche.
+metal in quanto questo tipo di musica presenta una vasta varietà di sottogeneri, ciascuno con il proprio stile linguistico e le proprie tematiche.
 La classificazione delle liriche è stata effettuata utilizzando tecniche di
 text-preprocessing e text-mining.
 Uno dei metodi più noti per la classificazione è quello basato su
@@ -120,8 +116,8 @@ no                 & 0.004121           \\ \hline
 \label{t_lang}
 \end{table}
 Per la classificazione finale sono state mantenute esclusivamente le
-liriche in lingua inglese in quanro le altre lingue sono troppo poco frequenti
-per poter essere usate sarebbero un fattore di confusione
+liriche in lingua inglese in quanto le altre lingue sono troppo poco frequenti
+per poter essere usate e sarebbero un fattore di confusione
 per gli algoritmi di classificazione. La rimozione delle liriche mancanti
 o non in inglese riduce il numero di record a 200556.
 \subsection{Gestione del genere musicale}
@@ -139,7 +135,7 @@ dall'effettivo contenuto delle liriche.
 Un secondo bias è relativo al fatto che i generi sono associato al
 gruppo musicale e non al singolo album, ciò che accade nella realtà è
 che un artista produce album di diversi generi, mentre invece nel dataset
-questa distinzione non è evidente.\newpage
+questa distinzione non è evidente.
 I nove generi selezionati dagli autori sono i seguenti:
 \begin{itemize}
 \item Rock
@@ -222,7 +218,7 @@ fornisce una buona copertura dei generi per anno (Figura \ref{fig_genre_year}).
 \caption{Distribuzione dei generi musicali negli anni}
 \label{fig_genre_year}
 \end{figure}
-
+Si vede come alcuni generi comincino effettivamente a svilupparsi a partire da un determinato anno.
 \section{Preprocessamento del testo}
 Per poter eseguire una classificazione
 ottimale è necessario procedere con un'operazione di filtraggio
@@ -233,22 +229,21 @@ Per farlo si è proceduto costruendo un workflow Knime
 \cite{10.1007/978-3-540-78246-9_38}
 utilizzato come wrapper per il codice Python 3 \cite{10.5555/1593511}.
 La scelta di utilizzare Python è dovuta al consumo estremamente elevato
-di risorse da parte di Knime sul dataset in questione.
+di risorse e tempo da parte di Knime sul dataset in questione.
 % Le operazioni che
 % in Python richiedono pochi minuti con un consumo limitato di memoria in
 % Knime necessitano di un numero estremamente più elevato sia di tempo che di memoria.
-% \begin{figure}[H]
-% \centerline{\includegraphics[width=1\columnwidth]{images/knime-text-prep}}
-% \caption{Workflow preprocessamento del testo in Knime}
-% \label{fig_knime_prep}
-% \end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[width=1\columnwidth]{images/knime-text-prep}}
+\caption{Workflow preprocessamento del testo in Knime}
+\label{fig_knime_prep}
+\end{figure}
 \subsection{Tokenizzazione}
 La tokenizzazione è stata eseguita con il package \textit{NLTK}
 (Natural language toolkit) \cite{Loper02nltk:the}, uno dei più utilizzati
 in questo ambito. Il primo passo è quello di separare ogni lirica nelle
 frasi che la compongono, questo viene ottenuto per mezzo di
-un modello supervisionato di \textit{Sentence boundary disambiguation} (SBD
-) preaddestrato su un insieme molto ampio di testi.
+un modello supervisionato di \textit{Sentence boundary disambiguation} (SBD) preaddestrato su un insieme molto ampio di testi.
 L'applicazione di questo modello e la seguente rimozione della punteggiatura
 produce un risultato di questo tipo:
 
@@ -272,9 +267,6 @@ Viene poi eseguita la rimozione delle ripetizioni nelle parole,
 l'algoritmo utilizzato rimuove iterativamente le lettere multiple
 dai token e verifica su un dizionario se la parola esiste o meno, in
 modo tale da decidere se continuare l'eliminazione o fermarsi.
-Si è proceduto verificando quali sono lo parole più frequenti per ogni genere,
-si nota che le dieci parole più frequenti sono piuttosto simili all'interno
-di ogni genere come visibile in tabella \ref{t_10_word}.
 
 \begin{lstlisting}[basicstyle=\tiny]
   ['searching', 'darkness', 'emptineeess', 'hiding', 'away', 'sun']
@@ -309,8 +301,8 @@ Per ridurre ulteriormente il numero di token estratti \`e stato
 eseguito il loro stemming, cercando quindi di ricondurre token
 simili alla loro radice comune. \'E stato utilizzato il
 \textit{LancasterStemming} \cite{10.1145/101306.101310}, un tipo di stemming
-molto "aggressivo" che riduce di molto la lunghezza dei token,
-la scelta dell'utilizzo di questo algoritmo è dovuta principalmente alla
+molto "aggressivo" che riduce di molto la lunghezza dei token.
+La scelta dell'utilizzo di questo algoritmo è dovuta principalmente alla
 grande dimensione del dataset e quindi si è deciso di sacrificare leggermente la
 leggibilità dei dati per ottenere un aumento di velocità nell'esecuzione degli
 algoritmi. Sulla frase mostrata in precedenza l'algoritmo produce i seguenti risultati:
@@ -354,7 +346,7 @@ Il grafico prodotto mostra dei topic abbastanza distribuiti e con poche
 sovrapposizioni, che sono comunque giustificate considerando
 la similarità intrinseca dei topic in oggetto.
 Visualizzando le parole più frequenti all'interno dei topic si è cercato di
-assegnare il sottogenere musicale associato ad ogni topic, i
+assegnare il sottogenere musicale a loro associato, i
 risultati sono mostrati in tabella \ref{t_topic_label}.
 \begin{table}[H]
 \centering
@@ -379,6 +371,13 @@ id & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \multicolumn{1}{l|}{} & \mu
 Alcuni topic sono facilmente identificabili grazie alla conoscenza del dominio, parole come "god", "land" o "power" sono facilmente ricollegabili al Power metal, mentre per generi come il Death o il Doom i risultati prodotti sono piuttosto ambigui. Per ottenere un'indicazione più rigorosa riguardo la bontà dei risultati vengono calcolate le misure di Perplexity e Topic Coherence (variante sliding window) con valori rispettivamente pari a -6.5242 e 0.3978.
 \section{Classificazione}
 La classificazione segue due procedimenti distinti nel caso di singola label o di label multipla. In comune vi è il fatto che il dataset viene suddiviso in 80\% training e 20\% test nello stesso modo per garantire consistenza ai risultati prodotti.
+Come input vengono costruite tre matrici \textit{Bag of Words} (BOW): una contenente dati in formato TF-IDF, una in cui ogni cella rappresenta le frequenze di ogni parola all'interno del documento (TF) e una matrice binaria in cui ogni cella rappresenta se la parola è contenuta o meno nel documento (Binary-TF).
+\begin{figure}[H]
+\centerline{\includegraphics[width=1\columnwidth]{images/knime}}
+\caption{Workflow classificazione in Knime}
+\label{fig_knime_class}
+\end{figure}
+
 \subsection{Classificazione multi-label}
 \subsubsection{Labeled LDA}
 Il primo modello utilizzato per la classificazione multi-label è un LLDA, la 
@@ -409,7 +408,7 @@ Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
   \label{fig_llda}
 \end{figure}
 Il modello presenta una minima differenza con LDA, il training ed il testing vengono eseguiti utilizzando un campionamento di Gibbs collassato, esattamente come accade per il modello tradizionale. Il modello viene addestrato per 100 epoche, con parametri $ \alpha = 0.1 / 9 $ e $ \beta = 1 $. La scelta dei parametri è influenzata dal fatto che un valore piccolo di $ \alpha $ dovrebbe portare il modello a classificare più frequentemente i campioni con pochi topic contemporaneamente, inoltre dai test sperimentali è la combinazione di parametri che ottiene la likelihood migliore sui dati.
-Le metriche utilizzate per la valutazione sono le classiche Micro-average, Macro-average e due metriche pensate per task di questo tipo ovvero la Hamming-loss \cite{6772729} e la Exact Match Ratio. La prima è definibile come la frazione di label non correttamente classificate:
+Le metriche utilizzate per la valutazione sono le classiche F1 Micro-average, F1 Macro-average e due metriche pensate per task di questo tipo ovvero la Hamming-loss \cite{6772729} e la Exact Match Ratio. La prima è definibile come la frazione di label non correttamente classificate:
 \begin{equation}
 HL=\frac{1}{|N|*|L|}\sum_{i=1}^{|N|}\sum_{j=1}^{|L|}xor(y_ij, z_ij)
 \end{equation}
@@ -425,8 +424,8 @@ I risultati sono riportati in tabella \ref{t_res_llda}:\\
 \caption{Risultati LLDA}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{F1-Mi} & \textbf{F1-Ma} & \textbf{HL} & \textbf{EMR} \\ \hline
-0.3300         & 0.3200         & 0.3158      & 0.0318       \\ \hline
+\textbf{Macro-F1} & \textbf{Micro-F1} & \textbf{HL} & \textbf{EMR} \\ \hline
+0.3200         & 0.3300         & 0.3158      & 0.0318       \\ \hline
 \end{tabular}
 \label{t_res_llda}
 \end{table}
@@ -434,13 +433,7 @@ Come ci si aspettava i risultati sono poco performanti in quanto il dataset
 è complesso ed estremamente sbilanciato.
 Il valore HL mostra che il modello \`e in grado di classificare le label
 con un buon grado di correttezza. Il valore EMR mostra invece che
-il modello non \`e in grado di classificare tutti i label di un record
-correttamente. 
-
-% \`E relativamente buono il valore della $ HL $: il modello sembra
-% apprendere delle differenze sensate; l'EMR mostra invece come
-% il modello non sia praticamente mai in grado di ottenere una classificazione
-% perfetta di tutte le label correttamente.
+il modello non \`e in grado di classificare quasi nessuna label di un record perfettamente. 
 \subsubsection{Percettrone multistrato}
 Un altro modello usato in letteratura per la classificazione multi-label
 è il percettrone multistrato (MLP) \cite{Rosenblatt1963PRINCIPLESON},
@@ -466,15 +459,17 @@ I risultati ottenuti sono decisamente migliori come illustrato in tabella \ref{t
 \begin{table}[H]
 \centering
 \caption{Risultati MLP}
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{F1-Mi} & \textbf{F1-Ma} & \textbf{HL} & \textbf{EMR} \\ \hline
-0.4300         & 0.3200         & 0.1493      & 0.2493       \\ \hline
+\textbf{Input matrix} & \textbf{Macro-F1} & \textbf{Micro-F1} & \textbf{HL} & \textbf{EMR} \\ \hline
+TF-IDF                & 0.4812            & 0.3633            & 0.1899      & 0.1832       \\ \hline
+TF                    & 0.4694            & 0.3307            & 0.1949      & 0.1760       \\ \hline
+Binary-TF             & 0.4855            & 0.3678            & 0.1898      & 0.1832       \\ \hline
 \end{tabular}
 \label{t_res_mlp}
 \end{table}
 Particolarmente interessante il valore molto basso della Hamming-Loss.
-In questo caso un buon 25\% delle label viene perfettamente classificato.
+In questo caso un buon 18\% delle label viene perfettamente classificato.
 
 \subsection{Classificazione singola-label}
 Sul dataset singola label vengono testati tre differenti modelli.
@@ -498,10 +493,10 @@ troppo alti.
 % addestrarla utilizzando ad esempio un kernel \textit{rbf}.
 \subsubsection{Albero di decisione}
 Infine \`e stato testato un semplice albero di decisione, sempre pesando le
-classi.
-% per verificare le capacità di un modello di
-% questo tipo sul dataset in questione.
-\indent Come misure di accuratezza sono state usate il Micro ed il Macro
+classi. 
+
+
+Come misure di accuratezza sono state usate il Micro ed il Macro
 F1-score, i risultati ottenuti sono mostrati in tabella \ref{t_res_single}.
 \begin{table}[H]
 \centering
@@ -537,7 +532,7 @@ Questo, con la possibile combinazione di feature non perfettamente adatte,
 può essere stata la causa principale di fallimento degli esperimenti.
 Sembra che il modello migliore in grado di operare
 sul dataset sia proprio la versione originale di LDA.
-Questo ci ha fatto ipotizzare che l'implementazione di LLDA usata 
+Questo ci ha fatto anche ipotizzare che l'implementazione di LLDA utilizzata
 potrebbe non essere ottimale.
 \section{Conclusioni}
 Nonostante i risultati non siano stati eccezionali, il report mostra che 
