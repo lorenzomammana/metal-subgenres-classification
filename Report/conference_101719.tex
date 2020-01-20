@@ -423,12 +423,20 @@ I risultati sono riportati in tabella \ref{t_res_llda}:\\
 \end{table}
 Come ci si aspettava i risultati sono poco performanti in quanto il dataset
 è complesso ed estremamente sbilanciato.
-\`E relativamente buono il valore della $ HL $: il modello sembra
-apprendere delle differenze sensate; l'EMR mostra invece come
-il modello non sia praticamente mai in grado di ottenere una classificazione
-perfetta di tutte le label correttamente.
+Il valore HL mostra che il modello \`e in grado di classificare le label
+con un buon grado di correttezza. Il valore EMR mostra invece che
+il modello non \`e in grado di classificare tutti i label di un record
+correttamente. 
+
+% \`E relativamente buono il valore della $ HL $: il modello sembra
+% apprendere delle differenze sensate; l'EMR mostra invece come
+% il modello non sia praticamente mai in grado di ottenere una classificazione
+% perfetta di tutte le label correttamente.
 \subsubsection{Percettrone multistrato}
-Un altro modello utilizzato in letteratura per la classificazione multi-label è il percettrone multistrato (MLP) \cite{Rosenblatt1963PRINCIPLESON}, l'architettura scelta è stata ottenuta in maniera sperimentale ed è così definita (Tabella \ref{t_mlp_arch}):
+Un altro modello usato in letteratura per la classificazione multi-label
+è il percettrone multistrato (MLP) \cite{Rosenblatt1963PRINCIPLESON},
+l'architettura scelta è stata ottenuta in maniera sperimentale
+ed è così definita (Tabella \ref{t_mlp_arch}):
 \begin{table}[H]
 \centering
 \caption{Architettura MLP}
@@ -442,7 +450,9 @@ dense\_2 (Dense)      & (None, 9)             & 1161              \\ \hline
 \end{tabular}
 \label{t_mlp_arch}
 \end{table}
-Il modello viene addestrato per 30 epoche utilizzando l'ottimizzatore Adam ($ lr = 0.01 $) con riduzione del learning rate di un fattore $ \phi = 0.1 $ in caso di non decrescita della loss sul test set.
+Il modello viene addestrato per 30 epoche utilizzando
+l'ottimizzatore Adam ($ lr = 0.01 $) con riduzione del learning rate di un
+fattore $ \phi = 0.1 $ in caso di non decrescita della loss sul test set.
 I risultati ottenuti sono decisamente migliori come illustrato in tabella \ref{t_res_mlp}.
 \begin{table}[H]
 \centering
@@ -454,18 +464,36 @@ I risultati ottenuti sono decisamente migliori come illustrato in tabella \ref{t
 \end{tabular}
 \label{t_res_mlp}
 \end{table}
-Particolarmente interessante il valore molto basso della Hamming-Loss, inoltre in questo caso un buon 25\% delle label viene perfettamente classificato.
+Particolarmente interessante il valore molto basso della Hamming-Loss.
+In questo caso un buon 25\% delle label viene perfettamente classificato.
 
 \subsection{Classificazione singola-label}
-Sul dataset singola label vengono testati tre differenti modelli, anche in questo caso vengono utilizzate le matrici TF-IDF, TF, e Binary-TF come input.
+Sul dataset singola label vengono testati tre differenti modelli.
+Anche in questo caso vengono utilizzate le matrici TF-IDF, TF, e Binary-TF come input.
 \subsubsection{Percettrone multistrato}
-Il percettrone multistrato descritto in precedenza può essere adattato per operare su singola label modificando l'attivazione del layer di output e il tipo di loss utilizzata.
-Per l'addestramento viene utilizzata una loss pesata sulle frequenze delle classi, in modo tale da avvantaggiare le classi poco frequenti rispetto a quelle molto presenti nel dataset.
+Il percettrone multistrato descritto in precedenza può essere
+adattato per operare su singola label modificando l'attivazione
+del layer di output e il tipo di loss utilizzata.
+Per l'addestramento viene usata una loss pesata sulle frequenze
+delle classi in modo tale da avvantaggiare le classi poco
+frequenti rispetto a quelle molto presenti nel dataset.
 \subsubsection{Macchina a vettori di supporto}
-La macchina a vettori di supporto (SVM) è uno dei modelli più noti per il compito di classificazione supervisionata, anche in questo caso le classi vengono pesate rispetto alla loro frequenza. Viene utilizzata una SVM con kernel lineare a causa dell'elevato tempo richiesto per addestrarla utilizzando ad esempio un kernel \textit{rbf}.
+La macchina a vettori di supporto (SVM) è uno dei modelli più noti
+per il compito di classificazione supervisionata. Anche in questo caso le classi
+vengono pesate rispetto alla loro frequenza.
+\`E stata usata una SVM con kernel lineare. \`E stato testato anche il
+kernel \textit{rbf} ma i tempi richiesti per l'addestramento sono risultati
+troppo alti.
+% Viene usata una SVM con kernel
+% lineare a causa dell'elevato tempo richiesto per
+% addestrarla utilizzando ad esempio un kernel \textit{rbf}.
 \subsubsection{Albero di decisione}
-Infine viene testato un semplice albero di decisione, sempre pesando le classi, per verificare le capacità di un modello di questo tipo sul dataset in questione.
-\indent Come misure di accuratezza sono state usate il Micro ed il Macro F1-score, i risultati ottenuti sono mostrati in tabella \ref{t_res_single}.
+Infine \`e stato testato un semplice albero di decisione, sempre pesando le
+classi.
+% per verificare le capacità di un modello di
+% questo tipo sul dataset in questione.
+\indent Come misure di accuratezza sono state usate il Micro ed il Macro
+F1-score, i risultati ottenuti sono mostrati in tabella \ref{t_res_single}.
 \begin{table}[H]
 \centering
 \caption{Risultati ottenuti su singola label}
@@ -484,11 +512,33 @@ Tree           & Binary-TF             & 0.2252            & 0.2930            \
 \end{tabular}
 \label{t_res_single}
 \end{table}
-Il percettrone ottiene i risultati migliori quando l'attenzione viene posta sulla classe più frequente, più interessante è forse il risultato ottenuto quando l'attenzione è posta sulle classi meno frequenti, in questo caso il modelli migliore è la SVM, anche se il vantaggio non è particolarmente significativo per giustificarne l'utilizzo rispetto al percettrone.
+Il percettrone ottiene i risultati migliori quando l'attenzione viene posta
+sulla classe più frequente.
+Più interessante è forse il risultato ottenuto quando l'attenzione
+è posta sulle classi meno frequenti. In questo caso il modelli migliore è la
+SVM, anche se il vantaggio non è particolarmente significativo
+per giustificarne l'utilizzo rispetto al percettrone.
 \section{Discussione}
-I risultati ottentuti sono stati al di sotto delle aspettative, ci si aspettava soprattutto un riscontro maggiore sulla classificazione singola label. Come già detto in precedenza all'interno del dataset, sia per la classificazione singola che multipla, sono stati introdotti due bias piuttosto importanti. Questo, con la possibile combinazione di feature non perfettamente adatte, può essere stato la causa principale di fallimento degli esperimenti. Paradossalmente sembra che il modello migliore in grado di operare sul dataset sia proprio la versione originale di LDA, questo ci ha portato a discutere riguardo l'implementazione utilizzata di LLDA che potrebbe non essere a livello di quella del modello originale.
+I risultati ottenuti sono stati al di sotto delle aspettative: ci si aspettava
+un riscontro maggiore sulla classificazione singola label.
+Come già detto in precedenza, all'interno del dataset, sia per
+la classificazione singola che multipla, sono stati introdotti due bias
+rilevanti.
+Questo, con la possibile combinazione di feature non perfettamente adatte,
+può essere stata la causa principale di fallimento degli esperimenti.
+Sembra che il modello migliore in grado di operare
+sul dataset sia proprio la versione originale di LDA.
+Questo ci ha fatto ipotizzare che l'implementazione di LLDA usata 
+potrebbe non essere ottimale.
 \section{Conclusioni}
-Nonostante i risultati non siano stati eccezionali, si è riusciti a mostrare come le fondamenta per distinguere sottogeneri musicali a partire dal testo delle canzoni esistano e la classificazione potrebbe essere possibile. I risultati prodotti da LDA mostrano l'esistenza di una struttura sottostante i dati, se si fosse in grado di produrre un dataset maggiormente corretto, in termini di bilanciamento e consistenza delle classi, sarebbe probabilmente possibile ottenere una buona discriminazione. 
+Nonostante i risultati non siano stati eccezionali, \`e stato possibile
+mostrare come le fondamenta per distinguere sottogeneri musicali a
+partire dal testo delle canzoni esistano e la classificazione potrebbe
+essere possibile. I risultati prodotti da LDA mostrano l'esistenza
+di una struttura sottostante i dati, se si fosse in grado di
+produrre un dataset maggiormente corretto, in termini di bilanciamento
+e consistenza delle classi, sarebbe probabilmente possibile
+ottenere una buona discriminazione. 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 \end{document}
