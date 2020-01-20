@@ -202,7 +202,10 @@ Folk Metal        & 0.012797575        \\ \hline
 \end{tabular}
 \label{t_single_genre}
 \end{table}
-\'E interessante notare l'andamento dei generi nel tempo, il dataset fornisce una buona copertura dei generi per anno, in particolare si vede, come è accaduto realmente, un aumento della "pesantezza" del genere musicale con il passare degli anni (Figura \ref{fig_genre_year}).
+\`E interessante notare l'andamento dei generi nel tempo: il dataset
+fornisce una buona copertura dei generi per anno (Figura \ref{fig_genre_year}).
+% in particolare si vede, come è accaduto realmente, un aumento della
+% "pesantezza" del genere musicale con il passare degli anni .
 
 
 \begin{figure}[H]
@@ -212,27 +215,57 @@ Folk Metal        & 0.012797575        \\ \hline
 \end{figure}
 
 \section{Preprocessamento del testo}
-Le liriche estratte inizialmente sono molto sporche, contengono punteggiatura, parole poco o troppo frequenti etc... Per poter eseguire una classificazione corretta è necessario procedere con un'operazione di filtraggio del testo per ottenere dei \textit{token} ben formati. Per farlo si è proceduto costruendo un workflow Knime \cite{10.1007/978-3-540-78246-9_38} utilizzato come wrapper per il codice Python 3 \cite{10.5555/1593511}, la scelta di utilizzare Python è dovuta al consumo estremamente elevato di risorse da parte di Knime sul dataset in questione, le operazioni che in Python richiedono pochi minuti con un consumo limitato di memoria in Knime necessitano di un numero estremamente più elevato sia di tempo che di memoria.
-\begin{figure}[H]
-\centerline{\includegraphics[width=1\columnwidth]{images/knime-text-prep}}
-\caption{Workflow preprocessamento del testo in Knime}
-\label{fig_knime_prep}
-\end{figure}
+Per poter eseguire una classificazione
+ottimale è necessario procedere con un'operazione di filtraggio
+del testo per ottenere dei \textit{token} ben formati.
+Sono state quindi effettuate operazioni per rimuovere punteggiatura e
+parole troppo o troppo poco frequenti.
+Per farlo si è proceduto costruendo un workflow Knime
+\cite{10.1007/978-3-540-78246-9_38}
+utilizzato come wrapper per il codice Python 3 \cite{10.5555/1593511}.
+La scelta di utilizzare Python è dovuta al consumo estremamente elevato
+di risorse da parte di Knime sul dataset in questione.
+% Le operazioni che
+% in Python richiedono pochi minuti con un consumo limitato di memoria in
+% Knime necessitano di un numero estremamente più elevato sia di tempo che di memoria.
+% \begin{figure}[H]
+% \centerline{\includegraphics[width=1\columnwidth]{images/knime-text-prep}}
+% \caption{Workflow preprocessamento del testo in Knime}
+% \label{fig_knime_prep}
+% \end{figure}
 \subsection{Tokenizzazione}
-La tokenizzazione è stata eseguita con il package \textit{NLTK} (Natural language toolkit) \cite{Loper02nltk:the}, uno dei più utilizzati in questo ambito. Il primo passo è quello di separare ogni lirica nelle frasi che la compongono, questo viene ottenuto per mezzo di un modello supervisionato di \textit{Sentence boundary disambiguation} (SBD) preaddestrato su un insieme molto ampio di testi. L'applicazione di questo modello e la seguente rimozione della punteggiatura produce un risultato di questo tipo:
+La tokenizzazione è stata eseguita con il package \textit{NLTK}
+(Natural language toolkit) \cite{Loper02nltk:the}, uno dei più utilizzati
+in questo ambito. Il primo passo è quello di separare ogni lirica nelle
+frasi che la compongono, questo viene ottenuto per mezzo di
+un modello supervisionato di \textit{Sentence boundary disambiguation} (SBD
+) preaddestrato su un insieme molto ampio di testi.
+L'applicazione di questo modello e la seguente rimozione della punteggiatura
+produce un risultato di questo tipo:
 
 \begin{lstlisting}[basicstyle=\tiny]
   Searching the darkness. And emptineeess. I'm hiding away from the sun  
   ['Searching the darkness', 'And emptineeess', 'I m hiding away from the sun']  
 \end{lstlisting}
-Si procede poi all'estrazione vera e propria dei singoli token, questa viene eseguita tramite l'utilizzo di espressioni regolari, in particolare utilizzando il \textit{Penn Treebank} \cite{marcus-etal-1993-building}. Questo permette di rimuovere token troppo frequenti basati sulla grammatica inglese e risolvere le contrazioni di alcune parole. I token vengono poi convertiti in minuscolo, vengono rimossi i numeri e le parole più corte di tre caratteri.
+Si procede poi all'estrazione vera e propria dei singoli token,
+questa viene eseguita tramite l'utilizzo di espressioni regolari,
+in particolare utilizzando il \textit{Penn Treebank}
+\cite{marcus-etal-1993-building}. Questo permette di rimuovere
+token troppo frequenti basati sulla grammatica inglese e risolvere
+le contrazioni di alcune parole. I token vengono poi convertiti
+in minuscolo, vengono rimossi i numeri e le parole più corte di tre caratteri.
 
 \begin{lstlisting}[basicstyle=\tiny]
   ['Searching the darkness', 'And emptineess', 'I m hiding away from the sun']  
   ['searching', 'darkness', 'emptineeess', 'hiding', 'away', 'sun']
 \end{lstlisting}
-Viene poi eseguita la rimozione delle ripetizioni nelle parole, l'algoritmo utilizzato rimuove iterativamente le lettere multiple dai token e verifica su un dizionario se la parola esiste o meno, in modo tale da decidere se continuare l'eliminazione o fermarsi.
-Si è proceduto verificando quali sono lo parole più frequenti per ogni genere, si nota che le dieci parole più frequenti sono piuttosto simili all'interno di ogni genere come visibile in tabella \ref{t_10_word}.
+Viene poi eseguita la rimozione delle ripetizioni nelle parole,
+l'algoritmo utilizzato rimuove iterativamente le lettere multiple
+dai token e verifica su un dizionario se la parola esiste o meno, in
+modo tale da decidere se continuare l'eliminazione o fermarsi.
+Si è proceduto verificando quali sono lo parole più frequenti per ogni genere,
+si nota che le dieci parole più frequenti sono piuttosto simili all'interno
+di ogni genere come visibile in tabella \ref{t_10_word}.
 
 \begin{lstlisting}[basicstyle=\tiny]
   ['searching', 'darkness', 'emptineeess', 'hiding', 'away', 'sun']
@@ -263,7 +296,15 @@ time          & time                 & world                 & world            
 \end{table}
 In totale vengono estratti 209780 token differenti.
 \subsection{Lemmatizzazione}
-Per ridurre ulterirormente il numero di token estratti si è proceduto eseguendo il loro stemming, cercando quindi di ricondurre token simili alla loro radice comune. \'E stato utilizzato il \textit{LancasterStemming} \cite{10.1145/101306.101310}, un tipo di stemming molto "aggressivo" che riduce di molto la lunghezza dei token, la scelta dell'utilizzo di questo algoritmo è dovuta principalmente alla grande dimensione del dataset, si è deciso di sacrificare leggermente la leggibilità dei dati per ottenere un aumento di velocità nell'esecuzione degli algoritmi. Sulla frase mostrata in precedenza l'algoritmo produce i seguenti risultati:
+Per ridurre ulteriormente il numero di token estratti \`e stato
+eseguito il loro stemming, cercando quindi di ricondurre token
+simili alla loro radice comune. \'E stato utilizzato il
+\textit{LancasterStemming} \cite{10.1145/101306.101310}, un tipo di stemming
+molto "aggressivo" che riduce di molto la lunghezza dei token,
+la scelta dell'utilizzo di questo algoritmo è dovuta principalmente alla
+grande dimensione del dataset e quindi si è deciso di sacrificare leggermente la
+leggibilità dei dati per ottenere un aumento di velocità nell'esecuzione degli
+algoritmi. Sulla frase mostrata in precedenza l'algoritmo produce i seguenti risultati:
 \begin{lstlisting}[basicstyle=\tiny]
   ['searching', 'darkness', 'emptineeess', 'hiding', 'away', 'sun']
   ['search', 'dark', 'emptin', 'hid', 'away', 'sun']
@@ -271,23 +312,41 @@ Per ridurre ulterirormente il numero di token estratti si è proceduto eseguendo
 L'algoritmo in questo caso sembra funzionare correttamente, applicato all'intero dataset il numero di token viene ridotto fino a 136261.
 \subsection{Filtraggio dei token per frequenza}
 Il numero di token contenuti nel dataset resta estremamente elevato, è fondamentale rimuovere i token rari, poichè sono poco influenti per il task di classificazione.
-Anche in questo caso si è preferito utilizzare Python invece di Knime in quanto il primo richiede all'incirca due minuti, mentre il secondo circa quaranta minuti. L'algoritmo utilizzato sfrutta il concetto di \textit{Multiset} per filtrare in maniera estremamente rapida i token, permettendo però di mantenere le ripetizioni che potrebbero essere utili in fase di classificazione.
+Anche in questo caso si è preferito utilizzare Python invece
+di Knime in quanto il primo richiede un tempo di esecuzione molto minore del
+secondo.
+L'algoritmo utilizzato sfrutta il concetto di \textit{Multiset} per
+filtrare in maniera estremamente rapida i token, permettendo però di
+mantenere le ripetizioni che potrebbero essere utili in fase di classificazione.
 I token vengono filtrati mediante l'utilizzo di una soglia così definita:
 \begin{equation}
 T = \gamma * N 
 \end{equation}
-Il parametro $ \gamma $ regola la percentuale di token da filtrare, per la classificazione è stato utilizzato $ \gamma = 0.01 $ in modo tale da filtrare tutti quei token che compaiono in meno dell'1\% delle liriche.
-Il filtraggio produce 1305 token, questo sta a significare che più del 99\% dei token sono estremamente poco frequenti!
+Il parametro $ \gamma $ regola la percentuale di token da filtrare, per
+la classificazione è stato utilizzato $ \gamma = 0.01 $ in modo
+tale da filtrare tutti quei token che compaiono in meno dell'1\% delle liriche.
+Il filtraggio produce 1305 token, questo sta a significare che più
+del 99\% dei token sono estremamente poco frequenti.
 \section{Latent Dirichlet Allocation}
-Prima di procedere con la classificazione vera e propria si è provato ad utilizzare LDA, principalmente per verificare se esistesse una struttura all'interno dei dati evidenziabile senza utilizzare le label.
-Il modello viene addestrato utilizzando un valore di $ \alpha $ asimmetrico appreso automaticamente sui dati che dovrebbe migliorare le performance su un dataset sbilanciato, settando 9 topic vengono prodotti i risultati mostrati in figura \ref{fig_topic_pca}.
+Prima di procedere con la classificazione vera e propria
+si è provato ad utilizzare LDA, principalmente per verificare
+se esistesse una struttura all'interno dei dati evidenziabile senza utilizzare
+le label.
+Il modello viene addestrato utilizzando un valore di $ \alpha $ asimmetrico
+appreso automaticamente sui dati che dovrebbe migliorare le performance su
+un dataset sbilanciato, settando 9 topic vengono prodotti i
+risultati mostrati in figura \ref{fig_topic_pca}.
 \begin{figure}[H]
 \centerline{\includegraphics[width=1\columnwidth, scale=0.3]{images/topic_pca}}
 \caption{Distanza tra i topic ottenuti}
 \label{fig_topic_pca}
 \end{figure}
-Il grafico prodotto mostra dei topic abbastanza distribuiti e con poche sovrapposizioni, che sono comunque giustificate considerando la similarità intrinseca dei topic in oggetto.
-Visualizzando le parole più frequenti all'interno dei topic si è cercato di assegnare il sottogenere musicale associato ad ogni topic, i risultati sono mostrati in tabella \ref{t_topic_label}.
+Il grafico prodotto mostra dei topic abbastanza distribuiti e con poche
+sovrapposizioni, che sono comunque giustificate considerando
+la similarità intrinseca dei topic in oggetto.
+Visualizzando le parole più frequenti all'interno dei topic si è cercato di
+assegnare il sottogenere musicale associato ad ogni topic, i
+risultati sono mostrati in tabella \ref{t_topic_label}.
 \begin{table}[H]
 \centering
 \caption{Top 10 parole frequenti per topic}
@@ -313,7 +372,7 @@ Alcuni topic sono facilmente identificabili grazie alla conoscenza del dominio, 
 La classificazione segue due procedimenti distinti nel caso di singola label o di label multipla. In comune vi è il fatto che il dataset viene suddiviso in 80\% training e 20\% test nello stesso modo per garantire consistenza ai risultati prodotti.
 \subsection{Classificazione multi-label}
 \subsubsection{Labeled LDA}
-Il primo modello utilizzato per la classificazione multi-label è un LLDA, la scelta di utilizzare un algoritmo di questo tipo è evidente, il semplice LDA, essendo un algoritmo non supervisionato non si presta bene per una classificazione di questo tipo, inoltre ogni lirica è etichettata e questo ci porta a ragionare in termini di classificazione supervisionata piuttosto che non. Rispetto al tradizionale approccio utilizzato da LDA, questo tipo di algoritmo restringe la distribuzione delle parole invece che su tutti i topic, solamente su quelli che rispettano l'etichetta presente nel training set. Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
+\Il primo modello utilizzato per la classificazione multi-label è un LLDA, la scelta di utilizzare un algoritmo di questo tipo è evidente, il semplice LDA, essendo un algoritmo non supervisionato non si presta bene per una classificazione di questo tipo, inoltre ogni lirica è etichettata e questo ci porta a ragionare in termini di classificazione supervisionata piuttosto che non. Rispetto al tradizionale approccio utilizzato da LDA, questo tipo di algoritmo restringe la distribuzione delle parole invece che su tutti i topic, solamente su quelli che rispettano l'etichetta presente nel training set. Questo vincolo è mostrato in maniera grafica in figura \ref{fig_llda}.
 
 \begin{figure}[H]
 \vspace{-5mm}
@@ -337,7 +396,9 @@ Le metriche utilizzate per la valutazione sono le classiche Micro-average, Macro
 \begin{equation}
 HL=\frac{1}{|N|*|L|}\sum_{i=1}^{|N|}\sum_{j=1}^{|L|}xor(y_ij, z_ij)
 \end{equation}
-Ed è utile per verificare se il modello non sta classificando in maniera completamente casuale, la seconda invece verifica il numero di multilabel perfettamente classificate:\\
+\`E utile per verificare se il modello non sta classificando in
+maniera completamente casuale, la seconda invece verifica il numero
+di multilabel perfettamente classificate:\\
 \begin{equation}
 EMR = \frac{1}{|N|}\sum_{i=1}^{|N|}I(Y_i = Z_i)
 \end{equation}
