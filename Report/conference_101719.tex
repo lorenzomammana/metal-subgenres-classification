@@ -47,8 +47,19 @@ component, formatting, style, styling, insert
 \end{IEEEkeywords}
 
 \section{Introduzione}
-Numerosi studi in letteratura sono stati effettuati riguardo la classificazione automatica di generi musicali sfruttando le liriche delle canzoni. Ci si aspetta che generi musicali diversi contengano tematiche e linguaggi molto differenti tra di loro e quindi la classificazione dovrebbe essere possibile. In questo studio si è deciso di verificare la possibilità di estendere questa analisi andando a valutare la possibilità di distinguere sottogeneri musicali di uno stesso genere. In particolare ci si è concentrati sull'analisi di sottogeneri della musica metal, questo tipo di musica presenta una enorme varietà di sottogeneri musicali, ciascuno con il proprio stile linguistico e le proprie tematiche.
-La classificazione delle liriche è stata effettuata utilizzando tecniche di text-preprocessing e text-mining. Uno dei metodi più noti per la classificazione è quello basato su Latent Dirichlet Allocation (LDA) \cite{LDA}, questo tipo di metodo permette di eseguire l'inferenza di \textit{Topic} all'interno di un testo in maniera non supervisionata.
+Numerosi studi in letteratura sono stati effettuati riguardo la classificazione
+automatica di generi musicali sfruttando le liriche delle canzoni. Ci si aspetta
+che generi musicali diversi contengano tematiche e linguaggi molto differenti
+tra di loro e quindi la classificazione dovrebbe essere possibile.
+Questo studio si concentra sulla possibilità di distinguere sottogeneri musicali
+dello stesso genere.
+In particolare ci si è concentrati sull'analisi di sottogeneri del genere musicale
+metal in quanto questo tipo di musica presenta una vasta varietà di sottogeneri
+musicali, ciascuno con il proprio stile linguistico e le proprie tematiche.
+La classificazione delle liriche è stata effettuata utilizzando tecniche di
+text-preprocessing e text-mining.
+Uno dei metodi più noti per la classificazione è quello basato su
+Latent Dirichlet Allocation (LDA) \cite{LDA}, questo tipo di metodo permette di eseguire l'inferenza di \textit{Topic} all'interno di un testo in maniera non supervisionata.
 Avendo a disposizione dati etichettati con uno o più sottogeneri si è utilizzato una versione più moderna di LDA, denomita LLDA (Labeled LDA) \cite{ramage-etal-2009-labeled} che permette di etichettare i \textit{topic} ottenendo una classificazione supervisionata.  
 \section{Dataset}
 Il dataset è stato costruito eseguendo lo scraping di due diversi siti web \href{http://www.darklyrics.com}{Darklyrics} e \href{https://www.metal-archives.com/}{Metal Archives}, il primo sito è una collezione di liriche, mentre il secondo è stato utilizzato per integrare le informazioni riguardo al genere degli artisti. 
@@ -59,7 +70,7 @@ La prima versione del dataset prodotta è composta da 259166 liriche, ogni liric
 \item year - L'anno di uscita
 \item song - Il nome della canzone
 \item lyrics - Le liriche della canzone
-\item genre - Il genere o i generi della canzone
+\item genre - Il genere o i generi del gruppo
 \item lang - La lingua della canzone
 \end{itemize}
 Il dataset estratto contiene numerosi campi mancanti come mostrato in tabella \ref{t_missing}:
@@ -99,11 +110,28 @@ no                 & 0.004121           \\ \hline
 \end{tabular}
 \label{t_lang}
 \end{table}
-Per la classificazione finale sono state mantenute esclusivamente le liriche in lingua inglese, le altre lingue sono troppo poco frequenti per poter essere utilizzate e sarebbero un fattore confondente troppo grande per gli algoritmi di classificazione.
-La rimozione delle liriche mancanti o non in inglese riduce il numero di righe a 200556.
+Per la classificazione finale sono state mantenute esclusivamente le
+liriche in lingua inglese in quanro le altre lingue sono troppo poco frequenti
+per poter essere usate sarebbero un fattore di confusione
+per gli algoritmi di classificazione. La rimozione delle liriche mancanti
+o non in inglese riduce il numero di record a 200556.
 \subsection{Gestione del genere musicale}
-Come si vede in tabella \ref{t_missing} il numero di generi univoci presenti all'interno del dataset è estremamente elevato, questo è dovuto al fatto che i dati estratti tramite scraping non sono ben categorizzati, ma possono presentare leggere variazioni o ordinamenti differenti. Per poter rendere fattibile la classificazione è stata utilizzata la conoscenza del dominio per raggruppare i sottogeneri in macro-sottogeneri, in particolare la scelta è stata quella di fissare nove generi principali a cui vengono ricondotte tutte le liriche nle dataset. Questo introduce ovviamente un bias in quanto la categorizzazione è basata esclusivamente su conoscenza a priori riguardante il genere, senza essere influenzata dall'effettivo contenuto delle liriche. Un secondo bias è relativo al fatto che i generi sono associato al gruppo musicale e non al singolo album, ciò che accade nella realtà è che un artista produce album di diversi generi, mentre invece nel dataset questa distinzione non è evidente.\newpage
-I nove generi proposti sono i seguenti:
+Come si vede in tabella \ref{t_missing} il numero di generi univoci presenti
+all'interno del dataset è estremamente elevato, questo è dovuto al fatto che i dati
+estratti tramite scraping non sono ben categorizzati, ma possono presentare
+leggere variazioni o ordinamenti differenti.
+Per poter agevolare la classificazione è stata utilizzata la
+conoscenza del dominio per raggruppare i sottogeneri in macro-sottogeneri,
+in particolare la scelta è stata quella di fissare nove generi principali
+a cui vengono ricondotte tutte le liriche nel dataset. Questo introduce
+un bias in quanto la categorizzazione è basata esclusivamente
+su conoscenza a priori riguardante il genere, senza essere influenzata
+dall'effettivo contenuto delle liriche.
+Un secondo bias è relativo al fatto che i generi sono associato al
+gruppo musicale e non al singolo album, ciò che accade nella realtà è
+che un artista produce album di diversi generi, mentre invece nel dataset
+questa distinzione non è evidente.\newpage
+I nove generi selezionati dagli autori sono i seguenti:
 \begin{itemize}
 \item Rock
 \item Heavy
@@ -115,7 +143,18 @@ I nove generi proposti sono i seguenti:
 \item Doom
 \item Black
 \end{itemize}
-I generi sono stati selezionati in base alle pre-conoscenze degli autori in modo tale che possa essere stabilito un ordine tra di essi; nella lista precedente ogni genere è teoricamente contenuto all'interno dell'insieme composto dal genere successivo. Vengono prodotti due dataset utilizzati per il task di classificazione, il primo è un dataset multi-label, mentre il secondo utilizza l'ordinamento per associare una singola label come attributo di output. I dataset prodotti sono fortemente sbilanciati, il dataset multilabel può teoricamente rappresentare $ 2^9 - 1 = 511 $ generi diversi, nel dataset sono presenti solamente 110 di queste possibili combinazioni. Come mostrato in tabella \ref{t_multi_genres} sono solamente 18 i generi con frequenza superiore all'1\%, ci si aspetta quindi che la classificazione su questo dataset sarà particolarmente complicata.
+% I generi sono stati selezionati in base alle conoscenze degli
+% autori in modo tale che possa essere stabilito un ordine tra di essi;
+% nella lista precedente ogni genere è teoricamente contenuto
+% all'interno dell'insieme composto dal genere successivo.
+Vengono prodotti due dataset utilizzati per il task di classificazione:
+il primo è un dataset multi-label, mentre il secondo utilizza l'ordinamento
+per associare una singola label come attributo di output.
+I dataset prodotti sono fortemente sbilanciati, il dataset
+multilabel può teoricamente rappresentare $ 2^9 - 1 = 511 $ generi
+diversi, nel dataset sono presenti solamente 110 di queste
+possibili combinazioni. Come mostrato in tabella \ref{t_multi_genres} sono
+solamente 18 i generi con frequenza superiore all'1\%.
 \begin{table}[H]
 \centering
 \caption{Generi con frequenza superiore all'1\%}
@@ -142,7 +181,9 @@ I generi sono stati selezionati in base alle pre-conoscenze degli autori in modo
 \end{tabular}
 \label{t_multi_genres}
 \end{table}
-Nel caso singola-label il dataset rimane piuttosto sbilanciato, ma la classificazione dovrebbe essere nettamente più semplice da eseguire. Le frequenze sono mostrate in tabella \ref{t_single_genre}.
+Nel caso singola-label il dataset rimane piuttosto sbilanciato,
+ma la classificazione dovrebbe essere nettamente più semplice da eseguire.
+Le frequenze sono mostrate in tabella \ref{t_single_genre}.
 \begin{table}[H]
 \centering
 \caption{Frequenze generi singola label}
