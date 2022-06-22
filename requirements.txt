@@ -34,7 +34,7 @@ mkl-random==1.1.0
 mkl-service==2.3.0
 multiset==2.1.1
 nltk==3.4.5
-numpy==1.17.4
+numpy==1.22.0
 opt-einsum==3.1.0
 pandarallel==1.4.1
 pandas==0.25.2
