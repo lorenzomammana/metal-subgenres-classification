@@ -39,7 +39,7 @@ opt-einsum==3.1.0
 pandarallel==1.4.1
 pandas==0.25.2
 partd==1.1.0
-Pillow==6.2.1
+Pillow==9.3.0
 protobuf==3.11.2
 pyparsing==2.4.2
 pyreadline==2.1
